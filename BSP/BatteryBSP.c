@@ -18,7 +18,7 @@ uint16_t BSP_GetBatteryVoltage(void)
         adc_value = HAL_ADC_GetValue(&hadc1);
         
         // 4. Convertimos el valor crudo a milivoltios.
-        // Multiplicamos por 3300mV (que es el máximo de tu tarjeta) y dividimos entre 4095
+        // Multiplicamos por 3300mV (max de la tarjeta) y dividimos entre 4095
         voltage_mv = (uint16_t)((adc_value * 3300) / 4095);
     }
     
