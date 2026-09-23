@@ -3,6 +3,6 @@
 #include <stdint.h>
 #include "main.h"
 
-/// @brief Realiza una lectura del ADC y la convierte a milivoltios.
-/// @return El voltaje de la batería en milivoltios (0 a 3300 mV).
+/// @brief Performs an ADC reading of the battery voltage and converts it to millivolts.
+/// @return The battery voltage in millivolts (0 to 3300 mV).
 uint16_t BSP_GetBatteryVoltage(void);
