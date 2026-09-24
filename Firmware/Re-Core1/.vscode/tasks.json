@@ -1,0 +1,81 @@
+{
+    // Build and flash tasks for STM32H523 using ST-Link V2.1
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "CMake: Build (Debug preset)",
+            "type": "shell",
+            "command": "cube-cmake --build --preset Debug -j",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "CMake: build (Release preset)",
+            "type": "shell",
+            "command": "cube-cmake --build --preset Release -j",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            // Alternative: Flash using STM32CubeProgrammer CLI
+            "label": "Flash with CubeProgrammer",
+            "type": "shell",
+            "command": "STM32_Programmer_CLI",
+            "args": [
+                "-c",
+                "port=SWD", // SWD protocol via ST-Link
+                "-w",
+                "${workspaceFolder}/build/Debug/${config:projectName}.elf",
+                "-v", // Verify after write
+                "-rst" // Reset MCU after flashing
+            ],
+            "dependsOn": "CMake: Build (Debug preset)",
+            "group": "test",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            // Clean build directory
+            "label": "Clean Debug",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "${workspaceFolder}/build/Debug",
+                "--target",
+                "clean"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            // Reset microcontroller
+            "label": "Reset MCU",
+            "type": "shell",
+            "command": "openocd",
+            "args": [
+                "-f",
+                "interface/stlink.cfg",
+                "-f",
+                "target/stm32h5x.cfg",
+                "-c",
+                "init",
+                "-c",
+                "reset",
+                "-c",
+                "exit"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}
