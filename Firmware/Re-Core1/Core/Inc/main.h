@@ -57,6 +57,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define COMM_TX_Pin GPIO_PIN_14
+#define COMM_TX_GPIO_Port GPIOB
+#define COMM_RX_Pin GPIO_PIN_15
+#define COMM_RX_GPIO_Port GPIOB
+#define DEBUG_SWDIO_Pin GPIO_PIN_13
+#define DEBUG_SWDIO_GPIO_Port GPIOA
+#define DEBUG_SWCLK_Pin GPIO_PIN_14
+#define DEBUG_SWCLK_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 
