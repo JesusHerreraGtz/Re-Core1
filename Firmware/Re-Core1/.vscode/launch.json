@@ -1,0 +1,105 @@
+{
+    // Debug configurations for STM32H523
+    "version": "0.2.0",
+    "configurations": [
+                {
+            "name": "Debug & Flash (ST-LINK)",
+            "type": "stlinkgdbtarget",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "runEntry": "main",
+            "preLaunchTask": "CMake: Build (Debug preset)",
+            "imagesAndSymbols": [
+                {
+                    "imageFileName": "${workspaceFolder}/build/Debug/${config:projectName}.elf"
+                }
+            ]
+        },
+        {
+            "name": "Debug & Flash (OpenOCD)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "openocd",
+
+            // Firmware
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/Debug/${config:projectName}.elf",
+
+            // STM32H523 configuration
+            "device": "STM32H523",
+            "svdFile": "${env:STM32_SVD_PATH}/STM32H523.svd",
+
+            // OpenOCD configuration for ST-Link
+            "configFiles": [
+                "interface/stlink.cfg",      // ST-Link interface
+                "target/stm32h5x.cfg"        // STM32H5 target
+            ],
+
+            "swoConfig": {
+                "enabled": false
+            },
+
+            // Debug behavior
+            "runToEntryPoint": "main",       // Stop at main() after flashing
+            "showDevDebugOutput": "raw",     // Show OpenOCD messages
+            "preLaunchTask": "CMake: Build (Debug preset)",  // Build before debugging
+
+            // Reset and halt target on launch
+            "postRestartCommands": [
+                "enable breakpoint",
+                "monitor reset halt"
+            ]
+        },
+        {
+            // Live Debug: Attach to running firmware without resetting
+            "name": "Debug (Attach)(OpenOCD)",
+            "type": "cortex-debug",
+            "request": "attach",             // Attach mode - doesn't flash or reset
+            "servertype": "openocd",
+
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/Debug/${config:projectName}.elf",
+
+            "device": "STM32H523",
+            "svdFile": "${env:STM32_SVD_PATH}/STM32H523.svd",
+
+            "configFiles": [
+                "interface/stlink.cfg",
+                "target/stm32h5x.cfg"
+            ],
+
+            "showDevDebugOutput": "raw"
+        },
+        {
+            // Flash Only: Program the chip without debugging
+            "name": "Flash (Release)(OpenOCD)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "openocd",
+
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/Release/${config:projectName}.elf",
+
+            "device": "STM32H523",
+
+            "configFiles": [
+                "interface/stlink.cfg",
+                "target/stm32h5x.cfg"
+            ],
+
+            "preLaunchTask": "CMake: build (Release preset)",
+            
+            "overrideLaunchCommands": [
+                "monitor reset halt",
+                "load",
+                "monitor reset run"
+            ],
+            
+            "postLaunchCommands": [
+                "-gdb-exit"
+            ],
+
+            "showDevDebugOutput": "raw"
+        }
+    ]
+}
